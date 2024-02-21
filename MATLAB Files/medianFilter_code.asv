@@ -1,0 +1,32 @@
+close all;
+clc;
+
+colored_img = imread("lena.png");
+salted_img = imnoise(colored_img,'salt & pepper',0.1);
+img = rgb2gray(salted_img);
+
+
+[m,n] = size(img);
+output = zeros(m,n);
+
+radius = 2;
+
+for i = 1:m
+    for j = 1:n
+        row_start = max(1,i-radius);
+        row_end = min(m,i+radius);
+        col_start = max(1,j-radius);
+        col_end = min(n,j+radius);
+
+        kernel = img(row_start:row_end,col_start:col_end);
+        output(i,j) = meian(kernel(:));
+    end
+end
+
+output = uint8(output);
+
+figure("Name","Mean Filter App");
+set(gcf, 'Position', get (0, 'ScreenSize'));
+subplot (131) , imshow (colored_img), title ('Original Image');
+subplot (132), imshow (salted_img) , title ('Noisy Image');
+subplot (133), imshow (output), title ('Output of Median Filter');
